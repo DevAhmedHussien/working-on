@@ -267,18 +267,16 @@ let  timeInMs = new Date();
         setValue(newValue);
     };
     
+    //add item to 
     const handleClick = (item)=>{
 		setProductsOfOrder([...productsOfOrder, item]);
-        // setProductsOfOrder([...productsOfOrder , {
-        //     id:uuidv4(),
-        //     table :`table-${tableId}`,
-        //     date:timeInMs,
-        //     item :item,
-            
-        // }])
-        // localStorage.setItem(`table-${tableId}` ,JSON.stringify(productsOfOrder))
-	}
-    console.log('productsOfOrder:',productsOfOrder)
+        localStorage.setItem(`table-${tableId}` ,JSON.stringify(
+            {
+            tableId:`table-${tableId}`,
+            date:timeInMs,
+            productsOfOrder}))
+        }
+
 	const handleChange = (item, d) =>{
 		let ind = -1;
 		productsOfOrder.forEach((data, index)=>{

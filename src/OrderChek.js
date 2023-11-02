@@ -61,7 +61,10 @@ export default function OrderChek({productsOfOrder,setProductsOfOrder,
     useEffect(()=>{
         if (localStorage.getItem(`table-${tableId}`) !== null) {
             const data = JSON.parse(localStorage.getItem(`table-${tableId}`)) ?? []; 
-            setProductsOfOrder(data)
+            if(data.productsOfOrder !== undefined ){
+                setProductsOfOrder(data.productsOfOrder)
+            }
+           
         }
         },[])
 
@@ -69,10 +72,10 @@ export default function OrderChek({productsOfOrder,setProductsOfOrder,
     console.log('dayOrder:',dayOrder)
 return (
     
-        <Box sx={{display:'flex' ,flexDirection:'column',gap:1 , height:"520px", border:'1px solid black' , mt:1 ,borderRadius:2}}>
+        <Box sx={{display:'flex' ,flexDirection:'column',gap:1 , height:"80vh", border:'1px solid black' , mt:1 ,borderRadius:2}}>
         <Typography variant='h4' sx={{textAlign:'center' , p :2}}>Table #{tableId} </Typography>
             <Box sx={{ background:'wheat' , width:282, overflowY: 'scroll', scrollBehavior:'smooth',  mt:0 , borderRadius:2 ,p:2
-            ,height:"350px", display:'flex' ,flexDirection:'column',gap:1}}>
+            ,height:"70vh", display:'flex' ,flexDirection:'column',gap:1}}>
             {
             // data.length == null ?
             productsOfOrder.map((product)=>{
