@@ -11,8 +11,11 @@
     import { v4 as uuidv4 } from 'uuid';
     import {  useParams } from 'react-router-dom';
   
+    const today = new Date();
+    const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+    const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    const timeInMs = date + ' ' + time;
 
-let  timeInMs = new Date();
     
     let pizza =  [{
             id:uuidv4(),
@@ -257,24 +260,25 @@ let  timeInMs = new Date();
     };
     }
 
-    export default function VerticalTabs({dayOrder , setDorder}) {
-        const [productsOfOrder , setProductsOfOrder] = useState([])
-        const [value, setValue] = useState(0);
-        // const [dayOrder,setDorder] = useState([])
-        const {tableId} = useParams();
+export default function VerticalTabs({dayOrder , setDorder}) {
+     const [productsOfOrder , setProductsOfOrder] = useState([])
+     const [value, setValue] = useState(0);
+     const {tableId} = useParams();
         
         const handleChanges = (event, newValue) => {
         setValue(newValue);
     };
-    
     //add item to 
     const handleClick = (item)=>{
-		setProductsOfOrder([...productsOfOrder, item]);
-        localStorage.setItem(`table-${tableId}` ,JSON.stringify(
+	setProductsOfOrder([...productsOfOrder, item]);
+         localStorage.setItem(`${tableId}` ,JSON.stringify(
             {
-            tableId:`table-${tableId}`,
+            tableId:`${tableId}`,
             date:timeInMs,
-            productsOfOrder}))
+            productsOfOrder,
+            payment:false
+        }
+            ))
         }
 
 	const handleChange = (item, d) =>{
@@ -289,9 +293,16 @@ let  timeInMs = new Date();
 		if (tempArr[ind].quantity === 0)
 			tempArr[ind].quantity = 1;
             setProductsOfOrder([...tempArr])
-            localStorage.setItem(`table-${tableId}` ,JSON.stringify(productsOfOrder))
+            localStorage.setItem(`${tableId}` ,JSON.stringify(
+                {
+                tableId:`${tableId}`,
+                date:timeInMs,
+                productsOfOrder,
+                payment:false
+            }
+                ))
 	}
-
+console.log(tableId)
     return (
         <Box
         sx={{ flexGrow: 1, bgcolor: '#eee',

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import {Link } from 'react-router-dom';
 export default function Dashboard (dayOrder,setDorder){
     let [x , setX] = useState([])
     
@@ -10,20 +11,21 @@ export default function Dashboard (dayOrder,setDorder){
         let arr = []
         const regex = /table-[0-9]/i;
         for (var key in local) {
-        // console.log(key);
+        console.log(key);
             if(key.match(regex)){
-                // console.log(key)
+                console.log(key)
                 let  r = JSON.parse(localStorage.getItem(key)) 
-            //    console.log(r)
+               console.log(r)
                 arr.push(r)
                 setX(arr)
-            // console.log(arr)
+            console.log('arr',arr)
        }
     }
     },[])
 
     return(
         <>
+        
             <Box sx={{ p:10 ,marginTop:'20px',display:'flex', flexWrap:'wrap', justifyContent:'center',gap:10}}>
                 {x.map((tabel,index)=>{
                     return (
@@ -34,12 +36,15 @@ export default function Dashboard (dayOrder,setDorder){
                        ,borderRadius:10,
                        position:'relative'
                        }}>
-                           <h1>{tabel.tableId}</h1>
+                        <Link to={`/order/${tabel.tableId}`}  >
+                            <h1>{tabel.tableId}</h1>
                            <p>{tabel.date}</p>
+                        </Link>
+                          
                            <Box>{
                                tabel.productsOfOrder.map((i,index)=>{
                                return <Box key={index}>
-                                           <span>{i.name}</span><span>- {i.quantity }  - </span> <span>- {i.prize}  - </span>
+                                           <span>{i.name}/</span><span> quantity:{i.quantity }  /</span> <span>price:{ +i.quantity * +i.prize}</span>
                                        </Box>
                                })
                                }</Box>

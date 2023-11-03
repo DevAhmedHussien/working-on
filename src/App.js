@@ -10,6 +10,7 @@ import { useState } from 'react';
 function App() {
     const [dayOrder,setDorder] = useState([])
     const [productsOfOrder , setProductsOfOrder] = useState([])
+    const[openTable,setOpenTabel]=useState({})
   
   return (
     <div className="App">
@@ -31,7 +32,7 @@ function App() {
         </div>
       {/* <VerticalTabs/> */}
       <Routes>
-        <Route path="/" element={<Sxema />} />
+        <Route path="/" element={<Sxema openTable={openTable} setOpenTabel={setOpenTabel} />} />
         <Route path="/order/:tableId" index element={<VerticalTabs productsOfOrder={productsOfOrder}
         setProductsOfOrder={setProductsOfOrder} dayOrder={dayOrder} setDorder={setDorder} />} />
         <Route path="/dashboard" element={<Dashboard productsOfOrder={productsOfOrder}

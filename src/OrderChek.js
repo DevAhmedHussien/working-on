@@ -9,7 +9,10 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import { v4 as uuidv4 } from 'uuid';
 
-let  timeInMs = new Date();
+const today = new Date();
+const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
+const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+const timeInMs = date + ' ' + time;
 
 export default function OrderChek({productsOfOrder,setProductsOfOrder,
     handleChange,dayOrder,setDorder }){
@@ -29,29 +32,36 @@ export default function OrderChek({productsOfOrder,setProductsOfOrder,
     const handleRemove = (id) =>{
         const arr = productsOfOrder.filter((item)=>item.id !== id);//delete element from array
         setProductsOfOrder(arr);
-        localStorage.setItem(`table-${tableId}` ,JSON.stringify(productsOfOrder))
-        // handlePrice();
+        localStorage.setItem(`${tableId}` ,JSON.stringify(
+             {
+             tableId:`${tableId}`,
+             date:timeInMs,
+             productsOfOrder,
+             payment:false
+         }
+          ))
+         handlePrice();
     }
     //handle  i payed and send chek 
     const handleOrderDay = ()=>{
         setDorder([...dayOrder , {
             id:uuidv4(),
-            table :`table-${tableId}`,
+            table :`${tableId}`,
             date:timeInMs,
             productsOfOrder,
             price,
-            payment:false
+            payment:true
         }])
             localStorage.setItem('ordersTheDayOneDay',JSON.stringify(dayOrder))
             setProductsOfOrder([])
-            // localStorage.removeItem(`table-${tableId}`);
-            // window.location.href = "/dashboard";
+            localStorage.removeItem(`${tableId}`);
+           
     }
     console.log(dayOrder)
     //handle cancel Order
     const handleOrderCancel = ()=>{
         setProductsOfOrder([])
-        localStorage.removeItem(`table-${tableId}`);
+        localStorage.removeItem(`${tableId}`);
     }
     //handle price 
     useEffect(()=>{
@@ -59,8 +69,8 @@ export default function OrderChek({productsOfOrder,setProductsOfOrder,
     },)
     // get localstorage
     useEffect(()=>{
-        if (localStorage.getItem(`table-${tableId}`) !== null) {
-            const data = JSON.parse(localStorage.getItem(`table-${tableId}`)) ?? []; 
+        if (localStorage.getItem(`${tableId}`) !== null) {
+            const data = JSON.parse(localStorage.getItem(`${tableId}`)) ?? []; 
             if(data.productsOfOrder !== undefined ){
                 setProductsOfOrder(data.productsOfOrder)
             }
@@ -73,7 +83,7 @@ export default function OrderChek({productsOfOrder,setProductsOfOrder,
 return (
     
         <Box sx={{display:'flex' ,flexDirection:'column',gap:1 , height:"80vh", border:'1px solid black' , mt:1 ,borderRadius:2}}>
-        <Typography variant='h4' sx={{textAlign:'center' , p :2}}>Table #{tableId} </Typography>
+        <Typography variant='h4' sx={{textAlign:'center' , p :2}}>{tableId} </Typography>
             <Box sx={{ background:'wheat' , width:282, overflowY: 'scroll', scrollBehavior:'smooth',  mt:0 , borderRadius:2 ,p:2
             ,height:"70vh", display:'flex' ,flexDirection:'column',gap:1}}>
             {
