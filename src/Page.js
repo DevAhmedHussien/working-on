@@ -1,5 +1,5 @@
 
-    import { useState } from 'react';
+    import { useEffect, useState ,useContext} from 'react';
     import PropTypes from 'prop-types';
     import Tabs from '@mui/material/Tabs';
     import Tab from '@mui/material/Tab';
@@ -10,13 +10,13 @@
     import OrderChek from './OrderChek'
     import { v4 as uuidv4 } from 'uuid';
     import {  useParams } from 'react-router-dom';
-  
+    import { openTableContext } from './context/TableContext';
+
     const today = new Date();
     const date = today.getFullYear() + '-' + (today.getMonth()+1) + '-' + today.getDate();
     const time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
     const timeInMs = date + ' ' + time;
 
-    
     let pizza =  [{
             id:uuidv4(),
             name: "pizza margrita",
@@ -234,6 +234,7 @@
             }}>
                 <Box sx={{display:'flex' , justifyContent:'center', alignItems:'center' }}>
                     <TextField label="Search " variant="standard"  sx={{width:250}}/>
+                    
                     {/* <div>icon</div> */}
                 </Box>
             <Typography 
@@ -260,27 +261,62 @@
     };
     }
 
-export default function VerticalTabs({dayOrder , setDorder}) {
-     const [productsOfOrder , setProductsOfOrder] = useState([])
-     const [value, setValue] = useState(0);
-     const {tableId} = useParams();
-        
-        const handleChanges = (event, newValue) => {
+export default function VerticalTabs() {
+    const [value, setValue] = useState(0);
+    const [price, setPrice] = useState(0);
+    const {tableId} = useParams();
+    const [productsOfOrder , setProductsOfOrder] = useState([])
+    // const {productsOfOrder , setProductsOfOrder} = useContext(openTableContext);
+    const {openTable,setOpenTabel}= useContext(openTableContext);
+    // const [openTable,setOpenTabel]=useState({
+    //         id:0,
+    //         tableId:0,
+    //         date:0,
+    //         orders:0,
+    //         payment:false,
+    //         price
+    // })
+    // handle Price
+    console.log(openTable)
+    const handlePrice = ()=>{
+        let ans = 0;
+        productsOfOrder.map((item)=>(
+            ans += item.quantity * item.prize
+        ))
+        setPrice(ans);
+        // setOpenTabel({...openTable,price:ans})//infinite loop
+    }
+    //to open table when i enter and updates prices
+    useEffect(()=>{ 
+        const handlePriceTable = ()=>{
+            let ans = 0;
+            productsOfOrder.map((item)=>(
+                ans += item.quantity * item.prize
+            ))
+            setPrice(ans);
+            setOpenTabel({
+                id:uuidv4(),
+                tableId:`${tableId}`,
+                date:timeInMs,
+                productsOfOrder,
+                payment:false,
+                price: ans,
+                })
+            }
+            handlePriceTable()
+        },[productsOfOrder])
+    const handleChanges = (event, newValue) => {
         setValue(newValue);
     };
     //add item to 
-    const handleClick = (item)=>{
+    const handleClick =  (item)=>{
 	setProductsOfOrder([...productsOfOrder, item]);
-         localStorage.setItem(`${tableId}` ,JSON.stringify(
-            {
-            tableId:`${tableId}`,
-            date:timeInMs,
-            productsOfOrder,
-            payment:false
-        }
-            ))
-        }
-
+    let newArrOfProduct = [...productsOfOrder, item]
+    setOpenTabel({...openTable,
+        tableId:`${tableId}`,
+        productsOfOrder: newArrOfProduct,
+    })
+}
 	const handleChange = (item, d) =>{
 		let ind = -1;
 		productsOfOrder.forEach((data, index)=>{
@@ -293,16 +329,9 @@ export default function VerticalTabs({dayOrder , setDorder}) {
 		if (tempArr[ind].quantity === 0)
 			tempArr[ind].quantity = 1;
             setProductsOfOrder([...tempArr])
-            localStorage.setItem(`${tableId}` ,JSON.stringify(
-                {
-                tableId:`${tableId}`,
-                date:timeInMs,
-                productsOfOrder,
-                payment:false
-            }
-                ))
 	}
-console.log(tableId)
+    console.log('opentable',openTable)
+
     return (
         <Box
         sx={{ flexGrow: 1, bgcolor: '#eee',
@@ -328,40 +357,35 @@ console.log(tableId)
         <TabPanel value={value} index={0} sx={{height:'100vh' , overflowY:'scroll'}}>
         {pizza.map((element)=>{
             return <div className='ok'>
-                    <Product key={element.id} product={element} dayOrder={dayOrder} setDorder={setDorder}
-                        handleClick={handleClick}  />
+                    <Product key={element.id} product={element} handleClick={handleClick}  />
                     </div>
         })}
         </TabPanel>
         <TabPanel value={value} index={1}>
         {burger.map((element)=>{
             return <div className='ok'>
-                        <Product key={element.id} product={element} dayOrder={dayOrder} setDorder={setDorder}
-                        handleClick={handleClick}  />
+                        <Product key={element.id} product={element} handleClick={handleClick}  />
                     </div>
         })}
         </TabPanel>
         <TabPanel value={value} index={2}>
         {pasta.map((element)=>{
             return <div className='ok'>
-                        <Product key={element.id} product={element} dayOrder={dayOrder} setDorder={setDorder}
-                        handleClick={handleClick}  />
+                        <Product key={element.id} product={element}handleClick={handleClick}  />
                     </div>
         })}
         </TabPanel>
         <TabPanel value={value} index={3}>
         {steck.map((element)=>{
             return <div className='ok'>
-                        <Product key={element.id} product={element} dayOrder={dayOrder} setDorder={setDorder}
-                        handleClick={handleClick}  />
+                        <Product key={element.id} product={element}  handleClick={handleClick}  />
                     </div>
         })}
         </TabPanel>
         <TabPanel value={value} index={4}>
         {drink.map((element)=>{
             return <div className='ok'>
-                        <Product key={element.id} product={element} dayOrder={dayOrder} setDorder={setDorder}
-                        handleClick={handleClick}  />
+                        <Product key={element.id} product={element} handleClick={handleClick}  />
                     </div>
         })}
         </TabPanel>
@@ -373,8 +397,9 @@ console.log(tableId)
         </TabPanel>
         {/* <SearchAppBar/> */}
 {/* here oreder  */}
-        <OrderChek productsOfOrder={productsOfOrder} setProductsOfOrder={setProductsOfOrder}
-        handleChange={handleChange} dayOrder={dayOrder} setDorder={setDorder}/>
+        <OrderChek productsOfOrder={productsOfOrder} setProductsOfOrder={setProductsOfOrder}handleChange={handleChange} 
+        price={price} setPrice={setPrice} handlePrice={handlePrice} 
+        openTable={openTable} setOpenTabel={setOpenTabel}/>
     </Box>
     );
     }

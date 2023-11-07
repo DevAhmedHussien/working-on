@@ -1,22 +1,36 @@
-// import { deepOrange } from "@mui/material/colors";
-// import { createContext, useState } from "react";
+import { createContext, useState } from "react";
+export const tableContext = createContext({})
 
-// // const [price, setPrice] = useState(0);
+export  const StatesProvider = ({children})=>{
+    const [dayOrder,setDorder] = useState([])
+    const [tprice, tsetPrice] = useState(0);
+    const handleTotalPrice = ()=>{
+            let ans = 0;
+        dayOrder.map((item)=>(
+            ans += item.price
+        ))
+        tsetPrice(ans);
+    }
+    function handleOrderDay(item){
+        console.log(item.id)
+        setDorder([...dayOrder , {...item,payment:true}])
+        let newDayOrder = [...dayOrder , {...item,payment:true}]
+        localStorage.setItem('ordersTheDayOneDay',JSON.stringify(newDayOrder))
 
-
-
-// export const ContextState = createContext({})
-
-// export  const StatesProvider = ({children})=>{
-
-//     const [productsOfOrder , setProductsOfOrder] = useState([]) 
-//     const [price, setPrice] = useState(0);
-//     const [dayOrder,setDorder] = useState([])
-
-//     return(
-//         <ContextState.Provider value={{productsOfOrder,setProductsOfOrder,price,setPrice,dayOrder,setDorder}}>
-//             {children}
-//         </ContextState.Provider>
-       
-//     )
-// }
+        localStorage.removeItem(`${item.tableId}`);
+        window.location.href ='/dashboard'
+    }
+    function handleOrderDayclose(item){
+        alert(item.id)
+        localStorage.removeItem(`${item.tableId}`);
+        // localStorage.removeItem(`${item.tableId}`);
+        window.location.href ='/dashboard'
+    }
+    return(
+        <tableContext.Provider
+        value={{dayOrder,setDorder,tprice, tsetPrice , handleTotalPrice,handleOrderDay,handleOrderDayclose}}>
+            {children}
+        </tableContext.Provider>
+    
+    )
+}

@@ -5,14 +5,14 @@ import Sxema from './Sxema';
 import NotFound from './NotFound';
 import { Routes,Route,Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
-import { useState } from 'react';
+import { StatesProvider } from './context/ContextStates';
+import { TableProvider } from './context/TableContext';
 
 function App() {
-    const [dayOrder,setDorder] = useState([])
-    const [productsOfOrder , setProductsOfOrder] = useState([])
-    const[openTable,setOpenTabel]=useState({})
-  
+
   return (
+    <StatesProvider>
+      <TableProvider>
     <div className="App">
       <div className='header'>
         <div>
@@ -32,14 +32,14 @@ function App() {
         </div>
       {/* <VerticalTabs/> */}
       <Routes>
-        <Route path="/" element={<Sxema openTable={openTable} setOpenTabel={setOpenTabel} />} />
-        <Route path="/order/:tableId" index element={<VerticalTabs productsOfOrder={productsOfOrder}
-        setProductsOfOrder={setProductsOfOrder} dayOrder={dayOrder} setDorder={setDorder} />} />
-        <Route path="/dashboard" element={<Dashboard productsOfOrder={productsOfOrder}
-        setProductsOfOrder={setProductsOfOrder} />} />
+        <Route path="/" element={<Sxema/>} />
+        <Route path="/order/:tableId" index element={<VerticalTabs/> }/>
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
+      </TableProvider>
+    </StatesProvider>
   );
 }
 

@@ -5,7 +5,6 @@ import { experimentalStyled as styled } from '@mui/material/styles';
 import Paper from '@mui/material/Paper';
 // import {  useParams } from 'react-router-dom';
 // import { useEffect } from 'react';
-  
     let tabels = [{
     id:1,
     name:'table 1'
@@ -53,18 +52,8 @@ name:'table 10'
         textAlign: 'center',
         color: theme.palette.text.secondary,
     }));
-   
-export default function Sxema({openTable,setOpenTabel}) {
-    // const {tableId} = useParams();
-    // const handleClick=()=>{
-    //     setOpenTabel({
-    //         table :tableId,
-    //         date :'11/20/2332',
-    //         items:{},
-    //         payment:false
-    //     })
-    // }
- 
+
+export default function Sxema() {
 return (
     <Box sx={{ flexGrow: 1 , mt : 8   }}>
     <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }}  >
