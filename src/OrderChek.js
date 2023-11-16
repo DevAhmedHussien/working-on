@@ -8,11 +8,8 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint'
 import DeleteIcon from '@mui/icons-material/Delete';
 import Button from '@mui/material/Button';
 import { tableContext } from './context/ContextStates';
-
-
-
-export default function OrderChek({productsOfOrder,setProductsOfOrder,
-    handleChange, price , handlePrice ,openTable}){
+export default function OrderChek({productsOfOrder,setProductsOfOrder,handleChange,
+price , handlePrice ,openTable}){
     const { dayOrder,setDorder}= useContext(tableContext)
     //ger id table 
     const {tableId} = useParams();

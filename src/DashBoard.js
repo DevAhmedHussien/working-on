@@ -25,7 +25,6 @@ useEffect(()=>{
             // console.log('arr',arr)
     }
     }
-    let d = 1;
 },[])
 useEffect(()=>{
         if (localStorage.getItem('ordersTheDayOneDay') !== null) {
@@ -106,12 +105,11 @@ return(
                          <span>price:{ +i.quantity * +i.prize}</span>
                         
                     </Box>
-             </>
+            </>
                     })
                     }
                 </Box>
                 
-
             </Box>  
             <div style={{padding:1,background:'yellow',}}>  <Typography variant="h5" sx={{textAlign:'center'}}>
                     Total:{tabel.price}</Typography> 
