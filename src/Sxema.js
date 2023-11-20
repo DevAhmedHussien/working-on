@@ -12,7 +12,13 @@ import Modal from '@mui/material/Modal';
 import Fade from '@mui/material/Fade';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import moment from 'moment';
+import dayjs from 'dayjs';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+
+import { StaticTimePicker } from '@mui/x-date-pickers/StaticTimePicker';
+import { useEffect } from 'react';
 
 const style = {
     position: 'absolute',
@@ -145,25 +151,45 @@ export default function Sxema() {
     const [tabelss,setTabels] = useState(tabels)
     const [number ,setNumber] = useState(0)
     const [person ,setPerson] = useState('')
+        //modal reseve setup
     const handlePersonResevedChange = (e) => {
         setPerson(e.target.value);
     }
     const handleNumberPersonResevedChange = (e) => {
         setNumber(e.target.value);
     }
+        //date
+        const [date, setDate] = useState('');
+        
+        // handles when user changes input in date inputfield
+        const handleChangeDate = (e) => {
+            setDate(e.target.value);
+        };
+        console.log('date:',(date))
+        //time
+        const [time, setTime] = useState('');
+        console.log('time:',(time))
     const Ok =(d)=>{
         const tabelsReseved = tabels.map((table)=>{
                 if(table.id === d.id){
                     table.personName =  person
                     table.number=number
                     table.reseved=!table.reseved
+                    table.date=(`${date}`).slice(0, 15)
+                    table.time=(`${time}`).slice(15, 47)+')'
+                    table.open = false
                     console.log(table)
                 }
                 return table;
             })
-            setTabels(tabelsReseved)
             setPerson('')
-            setNumber(0);
+            setNumber(0)
+            setDate('')
+            setTime('0')
+            setTabels(tabelsReseved)
+            // let storageRecieved  = tabelsReseved
+            localStorage.setItem('storageRecievedTable',JSON.stringify(tabelsReseved))
+           
         }
         //modal 
         // const [open, setOpen] = useState(false);
@@ -177,17 +203,15 @@ export default function Sxema() {
             })
             setTabels(tabelsReseved)
         };
-        //date
-            const [date, setDate] = useState(
-                moment(new Date()).format("'MMMM Do YYYY, h:mm:ss a'")
-            );
-            
-            // handles when user changes input in date inputfield
-            const handleChangeDate = e => {
-                setDate(e.target.value);
-            };
-        
-        console.log(date)
+        //wait handle close x
+
+        // get from localstorage 
+        useEffect(()=>{
+            if (localStorage.getItem('storageRecievedTable') !== null) {
+                const data = JSON.parse(localStorage.getItem('storageRecievedTable')) 
+               setTabels(data)
+            }
+            },[])
 return (
 <>
 <Box sx={{ flexGrow: 1 , mt : 8 , p: 5 }}>
@@ -198,12 +222,14 @@ return (
                 <Grid 
                 key={tabels.key} sx={{ width:350 }}  >
                     <Link to={`/order/table-${index+1}`}  >
-                        <Item sx={{height:100 ,borderRadius:2,textDecoration:'none',
+                        <Item sx={{height:200 ,borderRadius:2,textDecoration:'none',
                         background:_.reseved?'green':'silver'}} >
                             <h4>{_.name}</h4>
                             <div>
                                 <p>name:{_.personName} ||| <span>number:{_.number}</span></p>
-                                <p>{_.date}</p>
+                    
+                                <p> date: {_.date}</p>
+                                <p> time: {_.time}</p>
                                 
                             </div>
                         </Item>
@@ -233,18 +259,14 @@ return (
                 value={number}
                 onChange={handleNumberPersonResevedChange} />
                 {/* date */}
-                <TextField
-                    name="date"
-                    id="date"
-                    label="Date"
-                    type="date"
-                    InputLabelProps={{ shrink: true }}
-                    value={date}
-                    onChange={handleChangeDate}
-                    fullWidth
-                    required
-                />
+                <LocalizationProvider dateAdapter={AdapterDayjs}    >
+                    <DatePicker defaultValue={dayjs(date)}   onChange={ (date) =>{setDate(date.$d)}} />
+                </LocalizationProvider>
                 {/* ---------- */}
+                {/* time */}
+                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <StaticTimePicker defaultValue={dayjs(time)} onChange= {(time) =>{setTime(time.$d)}} />
+                </LocalizationProvider>
                 <Button variant="outlined" color={_.reseved?'success':'secondary'} 
                 sx={{width:150,height:30,fontSize:10 ,margin:'5px 0 20px 0'}}
                     onClick={()=>{
