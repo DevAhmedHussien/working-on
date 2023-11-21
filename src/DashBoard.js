@@ -5,10 +5,10 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import {Link } from 'react-router-dom';
 import Divider from '@mui/material/Divider';
+import { openTableContext } from './context/TableContext';
 export default function Dashboard (){
-const {dayOrder,setDorder,tprice,handleTotalPrice,handleOrderDay
-    ,handleOrderDayclose} = useContext(tableContext)
-
+    const {openTable} = useContext(openTableContext)
+    const {dayOrder,setDorder,tprice,handleTotalPrice,handleOrderDay,handleOrderDayclose} = useContext(tableContext)
     let [x , setX] = useState([])
 useEffect(()=>{
         let local = localStorage;
@@ -35,7 +35,9 @@ useEffect(()=>{
 useEffect(()=>{
         handleTotalPrice()
 },[dayOrder])
+
 console.log('payed',dayOrder)
+
 return(
     <>
     <Box sx={{ p:10 ,marginTop:'20px',display:'flex', flexWrap:'wrap', justifyContent:'center',gap:10}}>

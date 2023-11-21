@@ -160,7 +160,6 @@ export default function Sxema() {
     }
         //date
         const [date, setDate] = useState('');
-        
         // handles when user changes input in date inputfield
         const handleChangeDate = (e) => {
             setDate(e.target.value);
@@ -170,34 +169,42 @@ export default function Sxema() {
         const [time, setTime] = useState('');
         console.log('time:',(time))
     const Ok =(d)=>{
-        const tabelsReseved = tabels.map((table)=>{
+        const tabelsReseved = tabelss.map((table)=>{
                 if(table.id === d.id){
-                    table.personName =  person
-                    table.number=number
-                    table.reseved=!table.reseved
-                    table.date=(`${date}`).slice(0, 15)
-                    table.time=(`${time}`).slice(15, 47)+')'
-                    table.open = false
-                    console.log(table)
+                    if( table.reseved == true){
+                        table.personName =  ''
+                        table.number=0
+                        table.date= '' //(`${date}`).slice(0, 15)
+                        table.time=''//(`${time}`).slice(15, 47)+')'
+                        table.open = false
+                        table.reseved=false
+                    }else{
+                        table.personName =  person
+                        table.number=number
+                        table.reseved=!table.reseved
+                        table.date=(`${date}`).slice(0, 15)
+                        table.time=(`${time}`).slice(15, 47)+')'
+                        table.open = false
+                        console.log(table)
+                    }
+                
                 }
                 return table;
             })
+            setTabels(tabelsReseved)
             setPerson('')
             setNumber(0)
             setDate('')
-            setTime('0')
-            setTabels(tabelsReseved)
-            // let storageRecieved  = tabelsReseved
+            setTime('')
             localStorage.setItem('storageRecievedTable',JSON.stringify(tabelsReseved))
-           
         }
         //modal 
         // const [open, setOpen] = useState(false);
         const handleOpen = (d) => {
-            const tabelsReseved = tabels.map((table)=>{
+            const tabelsReseved = tabelss.map((table)=>{
                 if(table.id === d.id){
                     table.open=!table.open
-                    console.log(table)
+                    console.log(table.open)
                 }
                 return table;
             })
@@ -209,7 +216,7 @@ export default function Sxema() {
         useEffect(()=>{
             if (localStorage.getItem('storageRecievedTable') !== null) {
                 const data = JSON.parse(localStorage.getItem('storageRecievedTable')) 
-               setTabels(data)
+                setTabels(data)
             }
             },[])
 return (
@@ -227,7 +234,6 @@ return (
                             <h4>{_.name}</h4>
                             <div>
                                 <p>name:{_.personName} ||| <span>number:{_.number}</span></p>
-                    
                                 <p> date: {_.date}</p>
                                 <p> time: {_.time}</p>
                                 
@@ -265,7 +271,8 @@ return (
                 {/* ---------- */}
                 {/* time */}
                 <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <StaticTimePicker defaultValue={dayjs(time)} onChange= {(time) =>{setTime(time.$d)}} />
+                    <StaticTimePicker
+                    defaultValue={dayjs(time)} onChange= {(time) =>{setTime(time.$d)}} />
                 </LocalizationProvider>
                 <Button variant="outlined" color={_.reseved?'success':'secondary'} 
                 sx={{width:150,height:30,fontSize:10 ,margin:'5px 0 20px 0'}}
