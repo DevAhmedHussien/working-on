@@ -1,11 +1,11 @@
 import './App.css';
-import VerticalTabs from './Page';
-import Dashboard from './DashBoard';
-import Sxema from './Sxema';
-import Camera from './Camera';
-import NotFound from './NotFound';
+import VerticalTabs from './Components/Page';
+import Dashboard from './Components/DashBoard';
+import Sxema from './Components/Sxema';
+import Camera from './Components/camera-section/Camera';
+import NotFound from './Components/not-found-page/NotFound';
 import { Routes,Route } from 'react-router-dom';
-import NavBar from'./NavBar'
+import NavBar from'./Components/navBar/NavBar'
 // import Button from '@mui/material/Button'; Link
 import { StatesProvider } from './context/ContextStates';
 import { TableProvider } from './context/TableContext';

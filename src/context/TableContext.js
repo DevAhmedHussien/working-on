@@ -4,11 +4,9 @@ export const openTableContext = createContext({})
 
 export  const TableProvider = ({children})=>{
     const [openTable,setOpenTabel]=useState({
-        // id:uuidv4(),
-        id:0,
+        id:uuidv4(),
         tableId:0,
         date:0,
-        orders:0,
         payment:false,
         price:0
 })

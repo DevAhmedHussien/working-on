@@ -13,6 +13,7 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { Link } from 'react-router-dom';
+import {product} from '../Page'
 const pages = ['Sxema', 'admin', 'dashboard','camera'];
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -31,6 +32,7 @@ const handleCloseNavMenu = () => {
 const handleCloseUserMenu = () => {
     setAnchorElUser(null);
 };
+
 return (
     <AppBar position="static">
     <Container maxWidth="xl" sx={{background:'black',p:1}}>
